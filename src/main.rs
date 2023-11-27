@@ -1,18 +1,16 @@
-use std::sync::Arc;
 use std::thread;
+static mut X: [i32; 3] = [1, 2, 3];
 fn main() {
-    let v = Arc::new(vec![1, 2, 3, 4]);
-    let v1 = v.clone();
-    let v2 = v.clone();
-    let t1 = thread::spawn(move || {
-        println!("{}", v1.as_ref().len());
+    let t1 = thread::spawn(move || unsafe {
+        X[0] = 5;
     });
-    let t2 = thread::spawn(move || {
-        for v in v2.as_ref() {
-            println!("{:?}", v);
-        }
+
+    let t2 = thread::spawn(move || unsafe {
+        X[1] = 20;
     });
     t1.join().unwrap();
     t2.join().unwrap();
-    println!("the main thread {:?} stops", thread::current().id());
+    unsafe {
+        println!("{:?}", X);
+    }
 }
