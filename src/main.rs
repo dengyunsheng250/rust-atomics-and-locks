@@ -1,9 +1,11 @@
-use std::rc::Rc;
+use std::sync::Arc;
+use std::thread;
 fn main() {
-    let a = Rc::new([1, 2, 3]);
+    let a = Arc::new([1, 2, 3]);
     let b = a.clone();
 
-    // assert_eq!(a.as_ptr(), b.as_ptr()); true
-
-    println!("{}", Rc::strong_count(&a));
+    let t1 = thread::spawn(|| dbg!(a));
+    let t2 = thread::spawn(|| dbg!(b));
+    t1.join().unwrap();
+    t2.join().unwrap();
 }
