@@ -1,11 +1,14 @@
-use std::sync::Arc;
-use std::thread;
 fn main() {
-    let a = Arc::new([1, 2, 3]);
-    let b = a.clone();
-
-    let t1 = thread::spawn(|| dbg!(a));
-    let t2 = thread::spawn(|| dbg!(b));
-    t1.join().unwrap();
-    t2.join().unwrap();
+    //f(a,b) 中的a,b不可能是对于一个元素的引用
 }
+
+fn f(a: &i32, b: &mut i32) {
+    let before = *a;
+    *b += 1;
+    let after = *a;
+    if before != after {
+        x();
+    }
+}
+
+fn x() {}
